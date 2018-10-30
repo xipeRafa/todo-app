@@ -1,0 +1,45 @@
+rails g scaffold todo_list title:string description:text
+rake db:migrate
+
+routes.rb
+    resources :todo_lists
+    root "todo_lists#index"
+
+rails g model todo_item content:string todo_list:references
+rake db:migrate
+
+todo_list.rb
+    has many :todo_items
+
+routes.rb 
+   resources :todo_lists do
+      resources :todo_items 
+   end
+
+rails g controller todo_items
+
+rails g migration add_completed_at_to_todo_items completed_at:datatime
+rake db:migrate
+
+routes.rb
+    resources :todo_lists do
+    resources :todo_items do
+    	member do
+    		patch :complete
+    	end
+    end
+  end
+
+todo_item.rb
+   belongs_to :todo_list
+
+     def completed?
+  	!completed_at.blank?
+     end
+   end
+
+
+
+
+
+
